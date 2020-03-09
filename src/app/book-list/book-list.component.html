@@ -1,1 +1,17 @@
-<p>book-list works!</p>
+<div class="col-xs--12">
+   <a routerLink="/books/new" class="btn btn-primary">Nouveau livre</a>
+    <div class="card" *ngFor="let book of books; let i = index">
+        <h1>{{book.title}}</h1>
+        <h2><i>Ecrit par: {{book.author}}</i></h2>
+        <div class="col-6" *ngIf="book.photo != null">
+            <img src="{{book.photo}}" alt="Couverture de {{book.title}}" title="Couverture de {{book.title}}" class="img-fluid rounded">
+        </div>
+        <blockquote *ngIf="book.synopsis != null">
+            <p>{{book.synopsis}}</p>
+        </blockquote>
+        <div class="button-group">
+            <a routerLink="/books/view/'i'" class="btn btn-primary">Infos +</a>
+            <a class="btn btn-danger pull-right" (click)="removeBook(book)"><span class="glyphicon glyphicon-minus"></span> Supprimer le livre</a>
+        </div>
+    </div>
+</div>

@@ -28,6 +28,7 @@ saveBooks(){
 
 getListBooks(){
     firebase.database().ref('/books').on('value', (data: DataSnapshot) => {
+        console.log(data);
        this.books = data.val() ? data.val() : [];
         this.emitBookSubject();
     });

@@ -19,6 +19,7 @@ export class BookListComponent implements OnInit, OnDestroy {
       this.booksSubscription = this.bookService.booksSubject.subscribe(
       
           (books) => {
+              console.table(books);
               this.books = books;
           }
           
@@ -26,6 +27,10 @@ export class BookListComponent implements OnInit, OnDestroy {
       
       this.bookService.emitBookSubject();
   }
+    
+    removeBook(book: Book){
+        this.bookService.deleteBook(book);
+    }
     
     ngOnDestroy(){
         this.booksSubscription.unsubscribe();
