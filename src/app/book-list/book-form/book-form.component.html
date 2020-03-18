@@ -1,3 +1,31 @@
 <div class="col-xs-12">
-    
+    <form [formGroup]="formGroup" (ngSubmit)="createNewBook()">
+       <fieldset>
+          <legend>NOUVEAU LIVRE</legend>
+           
+           <label for="title">Titre</label><input type="text" class="form-control" formControlName="title" id="title"><br><br>
+           
+           <label for="author">Auteur</label><input type="text" class="form-control" formControlName="author" id="author"><br><br>
+           
+           <div formArrayName="photo">
+              <input type="checkbox" class="checkbox" id="photooui" (click)="changePhoto()"><label for="photooui">Ajouter une photo</label><br><br>
+              
+               <div class="col-xs-12" *ngFor="let photo of getPhoto().controls; let i = index">
+                   <input type="file" accept="image/*" [formControlName]="i" (change)="changeListener($event)"><br><br>
+               </div>
+           </div>
+           
+           <div formArrayName="synopsis">
+               
+               <input type="checkbox" class="checkbox" id="synopsisoui" (click)="changeSynopsis()"><label for="synopsisoui">Ajouter un synopsis</label><br><br>
+               
+               <div class="col-xs-12" *ngFor="let synopsis of getSynopsis().controls; let i = index">
+                   <textarea cols="15" rows="15" class="form-control" [formControlName]="i"></textarea><br><br>
+               </div>
+           </div>
+           
+           <input type="submit" class="btn btn-primary" value="Créer un livre" [disabled]="formGroup.invalid">
+           
+       </fieldset>
+    </form>
 </div>

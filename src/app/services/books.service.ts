@@ -67,5 +67,9 @@ deleteBook(book: Book){
     this.saveBooks();
     this.emitBookSubject();
 }
+
+uploadPhoto(photo: File){
+    
+}
     
 }

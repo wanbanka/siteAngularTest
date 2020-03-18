@@ -3,10 +3,10 @@
 <div class="card center">
         <h1>{{book.title}}</h1>
         <h2><i>Ecrit par: {{book.author}}</i></h2>
-        <div class="col-6" *ngIf="book.photo != null">
+        <div class="col-6" *ngIf="book.photo">
             <img src="{{book.photo}}" alt="Couverture de {{book.title}}" title="Couverture de {{book.title}}" class="img-fluid rounded">
         </div>
-        <blockquote *ngIf="book.synopsis != null">
+        <blockquote *ngIf="book.synopsis">
             <p>{{book.synopsis}}</p>
         </blockquote>
 </div>
