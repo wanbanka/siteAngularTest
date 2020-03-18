@@ -3,6 +3,7 @@ import {Book} from '../models/book.model';
 import {Observable, Subject} from 'rxjs';
 import * as firebase from 'firebase';
 import DataSnapshot = firebase.database.DataSnapshot;
+import UploadTaskSnapshot = firebase.storage.UploadTaskSnapshot;
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +56,20 @@ insertBook(book: Book){
 }
 
 deleteBook(book: Book){
+    
+    console.log(book);
+    
+    if(book.photo){
+        const storageRef = firebase.storage().refFromURL(book.photo);
+        
+        storageRef.delete().then(() => {
+           console.log('Photo removed !');
+        }, 
+                                (error) => {
+            console.log(error);
+        });
+    }
+    
     const bookIndex = this.books.findIndex((bookE1) => {
         if(bookE1 === book){
             return true;
@@ -69,7 +84,24 @@ deleteBook(book: Book){
 }
 
 uploadPhoto(photo: File){
-    
+    return new Promise((resolve, reject) => {
+       
+        const pointHeure = Date.now().toString();
+        const upload = firebase.storage().ref().child('images/' + pointHeure + photo.name).put(photo);
+        
+        upload.on(firebase.storage.TaskEvent.STATE_CHANGED, 
+                 () => {
+            console.log('Chargement...');
+        },
+                  (error) => {
+            console.log('Erreur de chargement ' + reject());
+        },
+                  () => {
+            resolve(upload.snapshot.ref.getDownloadURL());
+        }
+                 )
+        
+    });
 }
     
 }
