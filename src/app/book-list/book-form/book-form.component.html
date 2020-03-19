@@ -11,8 +11,7 @@
               <input type="checkbox" class="checkbox" id="photooui" (click)="changePhoto()"><label for="photooui">Ajouter une photo</label><br><br>
               
                <div class="col-xs-12" *ngFor="let photo of getPhoto().controls; let i = index">
-                   <input type="file" accept="image/*" (change)="detectFiles($event)"><br><br>
-                   <p class="text-success" *ngIf="fileUploaded">Fichier chargé !</p>
+                   <input type="file" class="form-control" accept="image/*" (change)="detectFiles($event)" [formControlName]="i"><br><br>
                </div>
            </div>
            
@@ -25,7 +24,7 @@
                </div>
            </div>
            
-           <input type="submit" class="btn btn-primary" value="Créer un livre" [disabled]="formGroup.invalid || fileIsUploading">
+           <input type="submit" class="btn btn-primary" value="Créer un livre" [disabled]="formGroup.invalid">
            
        </fieldset>
     </form>

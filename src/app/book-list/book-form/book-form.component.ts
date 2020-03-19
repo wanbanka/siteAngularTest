@@ -15,6 +15,10 @@ export class BookFormComponent implements OnInit {
     
     photo: boolean = false;
     synopsis: boolean = false;
+    
+    
+    fileUrl: string;
+    photoUpload: File;
 
   constructor(private bookService: BooksService, private formBuilder: FormBuilder, private router: Router) { }
 
@@ -24,11 +28,12 @@ export class BookFormComponent implements OnInit {
     
     initForm(){
         this.formGroup = this.formBuilder.group({
-            title: ['', [Validators.required, Validators.pattern('.{5,}')]],
-            author: ['', [Validators.required, Validators.pattern('.{5,}')]],
+            title: ['', [Validators.required, Validators.pattern('[a-zA-Z]{5,}')]],
+            author: ['', [Validators.required, Validators.pattern('[a-zA-Z]{5,}')]],
             photo: this.formBuilder.array([]),
             synopsis: this.formBuilder.array([])
         });
+        
     }
     
     getPhoto(){
@@ -49,24 +54,9 @@ export class BookFormComponent implements OnInit {
         this.photo ? this.removePhoto() : this.addPhoto();
     }
     
-    changeListener($event){
-        this.recupFile($event.target);
-    }
-    
-    recupFile(inputValue: any){
-        const file: File = inputValue.files[0];
-       const reader = new FileReader();
-        const photoValue = this.getPhoto();
-        let photo64 = null;
-        
-         reader.onloadend = function(){
-             photo64 = reader.result;
-             photoValue.patchValue([photo64]);
-         };
-        
-        reader.readAsDataURL(file);
-        
-        console.log(photo64);
+    detectFiles(event){
+        this.photoUpload = event.target.files[0];
+        console.log(this.formGroup.invalid);
     }
     
     getSynopsis(){
@@ -87,17 +77,38 @@ export class BookFormComponent implements OnInit {
         this.synopsis ? this.removeSynopsis() : this.addSynopsis();
     }
     
-    createNewBook(){
+    insertData(){
         const options = this.formGroup.value;
+        
+        console.log(options);
+        
         const newBook = new Book(
             options['title'],
-            options['author'],
-            options['photo'] ? options['photo'] : '',
-            options['synopsis'] ? options['synopsis'] : ''
+            options['author']
         );
+        
+        newBook.photo = (options['photo'].length > 0 && this.fileUrl != "") ? this.fileUrl : '';
+        
+        newBook.synopsis = options['synopsis'].length > 0 ? options['synopsis'][0] : '';
+        
+        console.log(newBook);
         
         this.bookService.insertBook(newBook);
         this.router.navigate(['/books']);
+    }
+    
+    createNewBook(){
+        
+        if(this.photoUpload && this.photoUpload != undefined){
+            this.bookService.uploadPhoto(this.photoUpload).then((url: string) => {
+                
+                this.fileUrl = url;
+                console.log(this.fileUrl);
+                this.insertData();
+        });
+        } else {
+            this.insertData();
+        }
     }
     
 }
